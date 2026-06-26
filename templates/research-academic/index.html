@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Academic personal website">
+    <title>Personal Website</title>
+    <link rel="stylesheet" href="assets/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top"><span data-field="name">Name</span></a>
+      <nav class="nav">
+        <a href="#education">Education</a>
+        <a href="#publications">Publications</a>
+        <a href="#experience">Research</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <img class="portrait" src="assets/profile.svg" alt="Profile visual">
+        <div>
+          <h1 data-field="name"></h1>
+          <p class="title" data-field="headline"></p>
+          <p class="loc" data-field="location"></p>
+          <p class="bio" data-field="summary"></p>
+          <div class="tag-row" id="focusTags"></div>
+        </div>
+      </section>
+
+      <section class="block" id="education" data-optional>
+        <h2>Education</h2>
+        <div class="education-grid" id="educationList"></div>
+      </section>
+
+      <section class="block" id="publications" data-optional>
+        <div class="publication-list" id="publicationList"></div>
+      </section>
+
+      <section class="block" id="experience" data-optional>
+        <h2>Research &amp; Experience</h2>
+        <div class="timeline" id="experienceList"></div>
+      </section>
+
+      <section class="block" data-optional>
+        <h2>Projects</h2>
+        <div class="outcome-grid" id="projectList"></div>
+      </section>
+
+      <section class="block" data-optional>
+        <div class="publication-list" id="awardList"></div>
+      </section>
+
+      <section class="block" data-optional>
+        <h2>Skills</h2>
+        <div class="skills-grid" id="skillList"></div>
+      </section>
+
+      <section class="block" id="contact">
+        <h2>Contact</h2>
+        <p data-field="contactNote"></p>
+        <div class="contact-grid" id="contactGrid"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      © <span id="year"></span> <span data-field="name"></span>
+    </footer>
+
+    <script src="assets/resume-data.js"></script>
+    <script src="assets/main.js"></script>
+  </body>
+</html>

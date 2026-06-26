@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Personal website">
+    <title>Personal Website</title>
+    <link rel="stylesheet" href="assets/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top"><span data-field="name">Name</span></a>
+      <nav class="nav">
+        <a href="#work">Experience</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-inner">
+          <p class="eyebrow" data-field="location"></p>
+          <h1 data-field="name"></h1>
+          <p class="headline" data-field="headline"></p>
+          <p class="lead" data-field="summary"></p>
+          <div class="tag-row" id="focusTags"></div>
+          <a class="cta" href="#contact" data-field="contactNote"></a>
+        </div>
+        <div class="stat-grid" id="statGrid"></div>
+      </section>
+
+      <section class="section" id="work" data-optional>
+        <h2><span class="num">01</span> Experience</h2>
+        <div class="timeline" id="experienceList"></div>
+      </section>
+
+      <section class="section" id="projects" data-optional>
+        <h2><span class="num">02</span> Projects</h2>
+        <div class="outcome-grid" id="projectList"></div>
+      </section>
+
+      <section class="section" data-optional>
+        <h2><span class="num">03</span> Education</h2>
+        <div class="education-grid" id="educationList"></div>
+      </section>
+
+      <section class="section" data-optional>
+        <h2><span class="num">04</span> Skills</h2>
+        <div class="skills-grid" id="skillList"></div>
+      </section>
+
+      <section class="section" data-optional>
+        <div class="publication-list" id="publicationList"></div>
+      </section>
+
+      <section class="section" data-optional>
+        <div class="publication-list" id="awardList"></div>
+      </section>
+
+      <section class="section contact-cta" id="contact">
+        <h2>Let's talk</h2>
+        <div class="contact-grid" id="contactGrid"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>© <span id="year"></span> <span data-field="name"></span></span>
+      <span>GitHub Pages</span>
+    </footer>
+
+    <script src="assets/resume-data.js"></script>
+    <script src="assets/main.js"></script>
+  </body>
+</html>

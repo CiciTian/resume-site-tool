@@ -1,0 +1,75 @@
+{
+  "profile": {
+    "name": "Arthur Pan",
+    "headline": "Software Development Engineer",
+    "location": "Pittsburgh, US",
+    "summary": "Software development engineer focused on AI applications, backend systems, full-stack platforms and education technology. Experience spans Python/Django data pipelines, React/Node.js platforms, multi-agent AI tutors, RAG retrieval, LLM evaluation, high-concurrency ID generation and payment/booking systems, with a combined research and engineering background."
+  },
+  "contact_note": "Currently based in Pittsburgh, US — reachable by email or phone.",
+  "contacts": [
+    { "type": "email", "label": "Email", "value": "arthurp@andrew.cmu.edu", "href": "mailto:arthurp@andrew.cmu.edu" },
+    { "type": "phone", "label": "Phone", "value": "+1 (412) 589-8948", "href": "tel:+14125898948" },
+    { "type": "location", "label": "Location", "value": "Pittsburgh, US", "href": "" }
+  ],
+  "focus_tags": ["AI Engineering", "Full-stack Development", "Backend Systems", "RAG / LLM", "Education Technology"],
+  "stats": [
+    { "value": "98%", "label": "pytest coverage on core services" },
+    { "value": "81%", "label": "retrieval hit-rate improvement" },
+    { "value": "87.3%", "label": "F1 on Dialogue Act dataset" }
+  ],
+  "education": [
+    { "school": "Carnegie Mellon University", "degree": "M.S. in Artificial Intelligence and Innovation", "period": "Aug. 2026 - Jul. 2028", "details": [] },
+    { "school": "University of Edinburgh", "degree": "B.E. in Electronics and Computer Science (First Class Honours)", "period": "Sep. 2021 - Jul. 2025", "details": [] }
+  ],
+  "experience": [
+    {
+      "organization": "GBase General Technology",
+      "role": "Software Development Engineer Intern",
+      "period": "Feb. 2026 - May 2026",
+      "location": "",
+      "bullets": [
+        "Built 13 RESTful APIs and data pipelines with Python, Django and PostgreSQL to ingest, store and manage customer-support queries.",
+        "Implemented JWT authentication through custom Django middleware, with Redis and Celery for session caching, token blacklisting and TTL expiration.",
+        "Refactored the customer-support service into a layered Controller-Service-Repository architecture with Adapter pattern support for heterogeneous data sources.",
+        "Instrumented Prometheus + Grafana health monitoring and maintained 98% pytest coverage across auth, adapters, LLM services and API endpoints."
+      ]
+    },
+    {
+      "organization": "Sserly Software",
+      "role": "Software Development Engineer Intern",
+      "period": "Oct. 2025 - Jan. 2026",
+      "location": "",
+      "bullets": [
+        "Core engineer on TutorMesh, a React, TypeScript and Node.js web platform for tutor search, booking, messaging and Stripe payments.",
+        "Hardened booking and payment reliability with Stripe idempotency keys, optimistic locking for time-slot reservation and webhook retry reconciliation.",
+        "Implemented a high-concurrency ID generator with segment prefetching from MySQL and local caching to reduce database round trips."
+      ]
+    },
+    {
+      "organization": "Stanford University - IDEAL Lab",
+      "role": "Software Development & Research Assistant",
+      "period": "Sep. 2024 - Apr. 2025",
+      "location": "",
+      "bullets": [
+        "Developed a multi-agent Socratic AI tutoring platform with Java and Spring AI, coordinating a supervisor and five specialized sub-agents.",
+        "Integrated Chroma vector store for course-material retrieval and per-student memory recall, improving retrieval hit-rate by 81% through an LLM-as-judge pipeline."
+      ]
+    }
+  ],
+  "projects": [
+    { "name": "GraphRAG Knowledge Assistant", "type": "AI & Machine Learning", "description": "Neo4j graph construction, hybrid retrieval, entity linking, re-ranking and LLM synthesis.", "technologies": ["Neo4j", "RAG", "LLM"], "link": "" },
+    { "name": "Multi-Agent Code Review Bot", "type": "AI & Developer Tools", "description": "LangGraph tool calling, AST parsing, static analysis, GitHub webhooks and structured output.", "technologies": ["LangGraph", "GitHub API"], "link": "" },
+    { "name": "Mini-GPT Pretraining from Scratch", "type": "Deep Learning", "description": "Byte-pair encoding, multi-head attention, RoPE, KV-cache and mixed-precision training.", "technologies": ["PyTorch"], "link": "" }
+  ],
+  "publications": [
+    "G. Pan, et al. A Cost-Benefit Analysis of On-Premise LLM Deployment: Breaking Even with Commercial LLM Services. IEEE Big Data.",
+    "S. Ashraf, J. Malamut, ..., G. Pan, et al. EduCoder: An Open-Source Annotation System for Education Transcript Data. ACL 2026."
+  ],
+  "awards": [],
+  "skills": [
+    { "group": "Languages", "items": ["Python", "JavaScript/TypeScript", "Java", "C/C++", "SQL"] },
+    { "group": "Frameworks", "items": ["Spring Boot", "Django", "Flask", "Express.js", "Next.js", "React"] },
+    { "group": "Data & Cloud", "items": ["PostgreSQL", "MySQL", "MongoDB", "Redis", "Docker", "Kubernetes", "AWS"] },
+    { "group": "AI / ML", "items": ["LangChain", "Spring AI", "Transformer", "BERT", "RAG", "Diffusion"] }
+  ]
+}

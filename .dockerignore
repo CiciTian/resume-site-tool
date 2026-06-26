@@ -1,0 +1,7 @@
+.venv/
+generated/
+out/
+__pycache__/
+*.pyc
+.DS_Store
+.git/

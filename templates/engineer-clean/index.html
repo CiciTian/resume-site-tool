@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Personal website">
+    <title>Personal Website</title>
+    <link rel="stylesheet" href="assets/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#name">
+        <span class="brand-mark" id="profileInitials" aria-hidden="true">AP</span>
+        <span data-field="name">Name</span>
+      </a>
+      <nav class="nav" aria-label="Sections">
+        <a href="#profile">Profile</a>
+        <a href="#contact">Contact</a>
+        <a href="#experience">Experience</a>
+        <a href="#education">Education</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="name">
+        <div class="hero-copy">
+          <p class="eyebrow" data-field="location"></p>
+          <h1 data-field="name"></h1>
+          <p class="headline" data-field="headline"></p>
+          <div class="hero-actions">
+            <a class="button primary" href="#experience">View experience</a>
+            <a class="button secondary" href="#contact">Get in touch</a>
+          </div>
+        </div>
+        <aside class="profile-panel">
+          <img class="profile-image" src="assets/profile.svg" alt="Profile visual">
+          <div class="stat-grid" id="statGrid"></div>
+        </aside>
+      </section>
+
+      <section class="section split-section" id="profile">
+        <div class="section-kicker">Profile</div>
+        <div>
+          <h2>About</h2>
+          <p class="lead" data-field="summary"></p>
+          <div class="tag-row" id="focusTags"></div>
+        </div>
+      </section>
+
+      <section class="section contact-band" id="contact">
+        <div>
+          <div class="section-kicker">Contact</div>
+          <h2>Contact</h2>
+          <p data-field="contactNote"></p>
+        </div>
+        <div class="contact-grid" id="contactGrid"></div>
+      </section>
+
+      <section class="section" id="experience" data-optional>
+        <div class="section-heading">
+          <div class="section-kicker">Experience</div>
+          <h2>Experience</h2>
+        </div>
+        <div class="timeline" id="experienceList"></div>
+      </section>
+
+      <section class="section outcome-section" data-optional>
+        <div class="section-heading">
+          <div class="section-kicker">Selected Work</div>
+          <h2>Projects</h2>
+        </div>
+        <div class="outcome-grid" id="projectList"></div>
+      </section>
+
+      <section class="section" data-optional>
+        <div class="publication-list" id="publicationList"></div>
+      </section>
+
+      <section class="section" data-optional>
+        <div class="publication-list" id="awardList"></div>
+      </section>
+
+      <section class="section education-section" id="education" data-optional>
+        <div class="section-heading">
+          <div class="section-kicker">Education</div>
+          <h2>Education</h2>
+        </div>
+        <div class="education-grid" id="educationList"></div>
+      </section>
+
+      <section class="section skills-section" data-optional>
+        <div class="section-heading">
+          <div class="section-kicker">Technical Skills</div>
+          <h2>Skills</h2>
+        </div>
+        <div class="skills-grid" id="skillList"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>© <span id="year"></span> <span data-field="name"></span></span>
+      <span>GitHub Pages personal website</span>
+    </footer>
+
+    <script src="assets/resume-data.js"></script>
+    <script src="assets/main.js"></script>
+  </body>
+</html>

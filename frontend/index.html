@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Resume to GitHub Pages</title>
+    <link rel="stylesheet" href="app.css">
+  </head>
+  <body>
+    <header>
+      <h1>Resume to Personal Website</h1>
+      <p>Upload a resume, pick a fixed template, preview the site, then publish to GitHub Pages.</p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2><span class="step">1</span> Choose a template</h2>
+        <div id="templates" class="template-grid"></div>
+      </section>
+
+      <section class="card">
+        <h2><span class="step">2</span> Upload your resume</h2>
+        <label class="dropzone" id="dropzone">
+          <input type="file" id="file" accept=".pdf,.docx,.txt,.md" hidden>
+          <span id="dropLabel">Click to choose a PDF, DOCX, TXT or Markdown file</span>
+        </label>
+        <p class="hint">The file is parsed into a fixed data structure.
+          If no LLM API key is set, the tool uses a limited local parser for demos.</p>
+        <div id="parseStatus" class="status"></div>
+      </section>
+
+      <section class="card" id="dataCard" hidden>
+        <h2><span class="step">3</span> Review the extracted data</h2>
+        <p class="hint">Edit the JSON if anything needs fixing, then generate.</p>
+        <textarea id="dataJson" spellcheck="false"></textarea>
+        <div class="actions">
+          <button id="generate" class="primary">Generate site</button>
+          <span id="genStatus" class="status"></span>
+        </div>
+      </section>
+
+      <section class="card" id="previewCard" hidden>
+        <h2><span class="step">4</span> Preview</h2>
+        <div class="preview-actions">
+          <a id="openTab" href="/preview/index.html" target="_blank">Open in new tab ↗</a>
+          <a id="download" href="/api/download">Download .zip</a>
+        </div>
+        <iframe id="preview" title="Generated site preview"></iframe>
+      </section>
+
+      <section class="card" id="publishCard" hidden>
+        <h2><span class="step">5</span> Publish to GitHub Pages</h2>
+        <p class="hint">For this local MVP, paste a GitHub token with public repo contents write access. A production app should use OAuth instead.</p>
+        <div class="form-grid">
+          <label>
+            GitHub username
+            <input id="githubUser" autocomplete="username" placeholder="CiciTian">
+          </label>
+          <label>
+            GitHub token
+            <input id="githubToken" type="password" autocomplete="off" placeholder="ghp_...">
+          </label>
+        </div>
+        <div class="actions">
+          <button id="publish" class="primary">Publish website</button>
+          <span id="publishStatus" class="status"></span>
+        </div>
+        <div id="publishResult" class="publish-result"></div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
