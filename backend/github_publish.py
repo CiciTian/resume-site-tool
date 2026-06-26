@@ -159,21 +159,67 @@ def _maybe_request(method: str, url: str, token: str, payload: dict | None = Non
 
 
 def _ensure_repo(owner: str, repo: str, token: str) -> dict:
+    login = _authenticated_login(token)
+    if login and login.lower() != owner.lower():
+        raise GitHubPublishError(
+            f"The GitHub token belongs to {login}, but the username field is {owner}. "
+            "Use the username that owns this token, or use a token from that username."
+        )
+
     repo_url = f"https://api.github.com/repos/{owner}/{repo}"
     existing = _maybe_request("GET", repo_url, token)
     if existing is not None:
         return existing
-    return _request(
-        "POST",
-        "https://api.github.com/user/repos",
-        token,
-        {
-            "name": repo,
-            "private": False,
-            "auto_init": False,
-            "description": "Personal website generated from a resume.",
-        },
-    )
+    try:
+        return _request(
+            "POST",
+            "https://api.github.com/user/repos",
+            token,
+            {
+                "name": repo,
+                "private": False,
+                "auto_init": False,
+                "description": "Personal website generated from a resume.",
+            },
+        )
+    except GitHubAPIError as exc:
+        if _repo_name_already_exists(exc):
+            raise GitHubPublishError(
+                f"Repository {owner}/{repo} already exists, but this token cannot access it. "
+                "If you use a fine-grained token, select this repository and grant "
+                "Contents: Read and write. If the repository is private, make it public "
+                "or use a token with private repo access."
+            ) from exc
+        if exc.status_code == 403:
+            raise GitHubPublishError(
+                f"Repository {owner}/{repo} was not found, and this token cannot create it. "
+                "Create the repository on GitHub first, then use a token with "
+                "Contents: Read and write access to that repository."
+            ) from exc
+        raise
+
+
+def _authenticated_login(token: str) -> str | None:
+    user = _request("GET", "https://api.github.com/user", token)
+    login = user.get("login")
+    return login if isinstance(login, str) else None
+
+
+def _repo_name_already_exists(exc: GitHubAPIError) -> bool:
+    if exc.status_code != 422:
+        return False
+    try:
+        body = json.loads(exc.body)
+    except json.JSONDecodeError:
+        return "name already exists" in exc.body.lower()
+
+    errors = body.get("errors") or []
+    for error in errors:
+        if not isinstance(error, dict):
+            continue
+        if error.get("field") == "name" and "already exists" in str(error.get("message", "")).lower():
+            return True
+    return "name already exists" in str(body.get("message", "")).lower()
 
 
 def _get_ref(owner: str, repo: str, branch: str, token: str) -> dict | None:

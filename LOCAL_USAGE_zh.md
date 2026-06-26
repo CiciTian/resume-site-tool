@@ -148,6 +148,12 @@ https://username.github.io/
 - 网络无法连接 GitHub
 - Fine-grained token 没选对仓库
 
+如果看到 `name already exists on this account`，说明仓库已经存在，但当前 token 没有权限读取它。解决方法：
+
+- Fine-grained token：编辑 token，选择这个仓库，并授予 `Contents: Read and write`
+- Classic token：使用带 `public_repo` 权限的 token
+- 如果仓库是 private，建议改成 public，或使用带 private repo 权限的 token
+
 ## 8. 给最终用户的最短说明
 
 ```text
