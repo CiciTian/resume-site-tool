@@ -104,6 +104,12 @@ export ANTHROPIC_API_KEY=sk-ant-...
 - Classic token：勾选 `public_repo`
 - Fine-grained token：选择目标仓库，并授予 `Contents: Read and write`
 
+仓库规则：
+
+- 如果要生成 `https://username.github.io/` 这种主页网站，仓库名必须是 `username.github.io`。
+- 仓库可以是完全空的，工具会自动创建第一次提交。
+- 如果使用 Fine-grained token，通常需要用户先在 GitHub 创建这个空仓库，并把 token 授权给这个仓库。
+
 发布后默认生成：
 
 ```text
@@ -135,7 +141,7 @@ https://username.github.io/
 常见原因：
 
 - Token 权限不够
-- 仓库名不是 `username.github.io`
+- 主页网站的仓库名不是 `username.github.io`
 - 网络无法连接 GitHub
 - Fine-grained token 没选对仓库
 
@@ -148,4 +154,3 @@ https://username.github.io/
 4. 打开 http://127.0.0.1:8000
 5. 上传简历，选择模板，生成网站
 ```
-

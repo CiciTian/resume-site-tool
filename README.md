@@ -88,8 +88,12 @@ Token permissions:
 - Classic PAT: `public_repo`
 - Fine-grained PAT: selected repo with `Contents: Read and write`
 
-If the repo does not exist and you use a fine-grained token, create the repo
-first because fine-grained tokens generally cannot create new repositories.
+Repository rules:
+
+- For a personal root site, use a public repo named `username.github.io`.
+- The repo may be completely empty. The publisher will create the first commit.
+- If the repo does not exist and you use a fine-grained token, create the repo
+  first because fine-grained tokens generally cannot create new repositories.
 
 ## Generated Site Structure
 

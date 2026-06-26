@@ -20,6 +20,19 @@ class GitHubPublishError(Exception):
     """Raised when GitHub rejects or cannot complete the publish request."""
 
 
+class GitHubAPIError(GitHubPublishError):
+    """GitHub returned a non-success HTTP status."""
+
+    def __init__(self, status_code: int, body: str) -> None:
+        self.status_code = status_code
+        self.body = body
+        super().__init__(f"GitHub HTTP {status_code}: {body}")
+
+
+class EmptyRepositoryError(GitHubPublishError):
+    """Raised when GitHub reports that a repository has no commits yet."""
+
+
 @dataclass(frozen=True)
 class PublishResult:
     repository_url: str
@@ -49,7 +62,13 @@ def publish_site(
     owner = username
     _ensure_repo(owner, repo, token)
 
-    head = _get_ref(owner, repo, branch, token)
+    active_branch = branch
+    try:
+        head = _get_ref(owner, repo, active_branch, token)
+    except EmptyRepositoryError:
+        active_branch = _initialize_empty_repo(site_dir, owner, repo, active_branch, token)
+        head = _get_ref(owner, repo, active_branch, token)
+
     parent_sha = head["object"]["sha"] if head else None
     base_tree = _get_commit(owner, repo, parent_sha, token)["tree"]["sha"] if parent_sha else None
 
@@ -70,15 +89,15 @@ def publish_site(
     commit_sha = _create_commit(owner, repo, message, tree_sha, token, parent_sha=parent_sha)
 
     if parent_sha:
-        _update_ref(owner, repo, branch, commit_sha, token)
+        _update_ref(owner, repo, active_branch, commit_sha, token)
     else:
-        _create_ref(owner, repo, branch, commit_sha, token)
+        _create_ref(owner, repo, active_branch, commit_sha, token)
 
-    _try_enable_pages(owner, repo, branch, token)
+    _try_enable_pages(owner, repo, active_branch, token)
 
     return PublishResult(
         repository_url=f"https://github.com/{owner}/{repo}",
-        pages_url=f"https://{username.lower()}.github.io/",
+        pages_url=_pages_url(username, repo),
         commit_sha=commit_sha,
     )
 
@@ -125,7 +144,7 @@ def _request(
             return json.loads(body) if body else {}
     except urllib.error.HTTPError as exc:
         body = exc.read().decode("utf-8", errors="replace")
-        raise GitHubPublishError(f"GitHub HTTP {exc.code}: {body}") from exc
+        raise GitHubAPIError(exc.code, body) from exc
     except urllib.error.URLError as exc:
         raise GitHubPublishError(f"Could not connect to GitHub: {exc.reason}") from exc
 
@@ -133,17 +152,18 @@ def _request(
 def _maybe_request(method: str, url: str, token: str, payload: dict | None = None) -> dict | None:
     try:
         return _request(method, url, token, payload)
-    except GitHubPublishError as exc:
-        if "GitHub HTTP 404" in str(exc):
+    except GitHubAPIError as exc:
+        if exc.status_code == 404:
             return None
         raise
 
 
-def _ensure_repo(owner: str, repo: str, token: str) -> None:
+def _ensure_repo(owner: str, repo: str, token: str) -> dict:
     repo_url = f"https://api.github.com/repos/{owner}/{repo}"
-    if _maybe_request("GET", repo_url, token) is not None:
-        return
-    _request(
+    existing = _maybe_request("GET", repo_url, token)
+    if existing is not None:
+        return existing
+    return _request(
         "POST",
         "https://api.github.com/user/repos",
         token,
@@ -157,10 +177,52 @@ def _ensure_repo(owner: str, repo: str, token: str) -> None:
 
 
 def _get_ref(owner: str, repo: str, branch: str, token: str) -> dict | None:
-    return _maybe_request(
-        "GET",
-        f"https://api.github.com/repos/{owner}/{repo}/git/ref/heads/{branch}",
+    try:
+        return _request(
+            "GET",
+            f"https://api.github.com/repos/{owner}/{repo}/git/ref/heads/{branch}",
+            token,
+        )
+    except GitHubAPIError as exc:
+        if exc.status_code == 404:
+            return None
+        if exc.status_code == 409 and "repository is empty" in exc.body.lower():
+            raise EmptyRepositoryError("GitHub repository is empty.") from exc
+        raise
+
+
+def _initialize_empty_repo(site_dir: Path, owner: str, repo: str, branch: str, token: str) -> str:
+    """Create the first commit in an empty repo so Git refs can be updated."""
+    index_path = site_dir / "index.html"
+
+    try:
+        _put_initial_index(owner, repo, index_path, token, branch=branch)
+        return branch
+    except GitHubAPIError as exc:
+        # Some empty repos reject an explicit branch on the first Contents API
+        # write. Retrying without branch lets GitHub use the repo default.
+        if exc.status_code not in {404, 422}:
+            raise
+
+    _put_initial_index(owner, repo, index_path, token, branch=None)
+    repo_info = _request("GET", f"https://api.github.com/repos/{owner}/{repo}", token)
+    return repo_info.get("default_branch") or branch
+
+
+def _put_initial_index(owner: str, repo: str, index_path: Path, token: str, *, branch: str | None) -> None:
+    payload = {
+        "message": "Initialize GitHub Pages repository",
+        "content": base64.b64encode(index_path.read_bytes()).decode("ascii"),
+    }
+    if branch:
+        payload["branch"] = branch
+
+    _request(
+        "PUT",
+        f"https://api.github.com/repos/{owner}/{repo}/contents/index.html",
         token,
+        payload,
+        ok_statuses={200, 201},
     )
 
 
@@ -267,3 +329,10 @@ def _try_enable_pages(owner: str, repo: str, branch: str, token: str) -> None:
         # Do not fail a successful content upload just because Pages API scope is
         # missing; surface the pages URL and let the UI mention it may need setup.
         return
+
+
+def _pages_url(username: str, repo: str) -> str:
+    user_site_repo = f"{username}.github.io".lower()
+    if repo.lower() == user_site_repo:
+        return f"https://{username.lower()}.github.io/"
+    return f"https://{username.lower()}.github.io/{repo}/"
