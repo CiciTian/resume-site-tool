@@ -18,6 +18,7 @@
     publishCard: document.getElementById("publishCard"),
     githubUser: document.getElementById("githubUser"),
     githubToken: document.getElementById("githubToken"),
+    githubRepo: document.getElementById("githubRepo"),
     publish: document.getElementById("publish"),
     publishStatus: document.getElementById("publishStatus"),
     publishResult: document.getElementById("publishResult"),
@@ -26,6 +27,73 @@
   function status(node, msg, kind) {
     node.textContent = msg || "";
     node.className = "status" + (kind ? " " + kind : "");
+  }
+
+  function appendLink(parent, text, href, className) {
+    var link = document.createElement("a");
+    link.textContent = text;
+    link.href = href;
+    link.target = "_blank";
+    link.rel = "noreferrer";
+    if (className) link.className = className;
+    parent.appendChild(link);
+    return link;
+  }
+
+  function copyText(text, button) {
+    function done() {
+      var previous = button.textContent;
+      button.textContent = "Copied";
+      setTimeout(function () { button.textContent = previous; }, 1600);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(function () {
+        window.prompt("Copy this website URL:", text);
+      });
+      return;
+    }
+
+    window.prompt("Copy this website URL:", text);
+  }
+
+  function renderPublishResult(body) {
+    els.publishResult.innerHTML = "";
+
+    var panel = document.createElement("div");
+    panel.className = "website-result";
+
+    var label = document.createElement("div");
+    label.className = "website-label";
+    label.textContent = "Your website URL";
+    panel.appendChild(label);
+
+    appendLink(panel, body.pages_url, body.pages_url, "website-url");
+
+    var note = document.createElement("p");
+    note.className = "publish-note";
+    note.textContent = "GitHub Pages can take 30-120 seconds before the link opens.";
+    panel.appendChild(note);
+
+    var actions = document.createElement("div");
+    actions.className = "result-actions";
+
+    var copy = document.createElement("button");
+    copy.type = "button";
+    copy.className = "secondary";
+    copy.textContent = "Copy website link";
+    copy.addEventListener("click", function () { copyText(body.pages_url, copy); });
+    actions.appendChild(copy);
+
+    appendLink(actions, "Open website", body.pages_url, "");
+    appendLink(actions, "GitHub repository", body.repository_url, "");
+
+    var commit = document.createElement("code");
+    commit.textContent = body.commit_sha.slice(0, 7);
+    actions.appendChild(commit);
+
+    panel.appendChild(actions);
+    els.publishResult.appendChild(panel);
   }
 
   // 1. Load templates -------------------------------------------------------
@@ -131,17 +199,21 @@
   els.publish.addEventListener("click", function () {
     var username = els.githubUser.value.trim();
     var token = els.githubToken.value.trim();
+    var repoName = els.githubRepo.value.trim();
     if (!username || !token) {
       status(els.publishStatus, "GitHub username and token are required.", "error");
       return;
     }
+
+    var payload = { username: username, token: token };
+    if (repoName) payload.repo_name = repoName;
 
     status(els.publishStatus, "Publishing to GitHub…", "busy");
     els.publish.disabled = true;
     fetch("/api/publish", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: username, token: token }),
+      body: JSON.stringify(payload),
     })
       .then(function (r) {
         return r.json().then(function (body) {
@@ -150,11 +222,8 @@
         });
       })
       .then(function (body) {
-        status(els.publishStatus, "Published.", "ok");
-        els.publishResult.innerHTML =
-          '<a href="' + body.repository_url + '" target="_blank" rel="noreferrer">Repository</a>' +
-          '<a href="' + body.pages_url + '" target="_blank" rel="noreferrer">Live site</a>' +
-          '<code>' + body.commit_sha.slice(0, 7) + "</code>";
+        status(els.publishStatus, "Published. Give GitHub Pages a moment, then open the website URL below.", "ok");
+        renderPublishResult(body);
       })
       .catch(function (err) {
         status(els.publishStatus, err.message, "error");

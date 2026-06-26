@@ -92,6 +92,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 4. 点击 Generate site。
 5. 在页面中预览网站。
 6. 点击 Download .zip 下载静态网站。
+7. 或点击 Publish website 发布，成功后页面会直接显示可复制的网站链接。
 
 下载的 zip 可以直接上传到 GitHub Pages、Netlify、Vercel 或任意静态网站托管平台。
 
@@ -115,6 +116,8 @@ export ANTHROPIC_API_KEY=sk-ant-...
 ```text
 https://username.github.io/
 ```
+
+发布成功后，页面会优先显示这个网站链接，并提供 Copy website link 按钮。GitHub Pages 有时需要 30-120 秒才真正打开，如果刚点开是 404，等一会儿刷新即可。
 
 注意：这是本地 MVP 版本。正式产品建议改成 GitHub OAuth，不建议让用户长期手动粘贴 token。
 

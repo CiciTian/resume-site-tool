@@ -95,6 +95,9 @@ Repository rules:
 - If the repo does not exist and you use a fine-grained token, create the repo
   first because fine-grained tokens generally cannot create new repositories.
 
+In the web UI, a successful publish shows the direct website URL first, with a
+copy button. GitHub Pages can take 30-120 seconds before the URL is reachable.
+
 ## Generated Site Structure
 
 ```text
